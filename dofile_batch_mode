@@ -1,0 +1,4 @@
+quit -sim
+vlog *.sv
+vsim -novopt tb
+run -all

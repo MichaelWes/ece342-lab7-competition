@@ -1,0 +1,75 @@
+quit -sim
+vlog definesPkg.sv
+vlog *.sv
+vsim -novopt tb
+add wave -group "Flag Bits" -label "Zero Flag" /tb/dut/a0/Z
+add wave -group "Flag Bits" -label "Negative Flag" /tb/dut/a0/N
+
+add wave -group "RF" -radix hex -label "Register File" /tb/dut/rf0/regs
+
+add wave -group "internal_decode_signals" -radix hex -label "s_ext(imm8)" /tb/dut/r0/s_ext_imm8
+add wave -group "internal_decode_signals" -radix hex -label "s_ext(imm11)" /tb/dut/r0/s_ext_imm11
+add wave -group "internal_decode_signals" -radix hex -label "Rx_valid" /tb/dut/r0/Rx_valid
+add wave -group "internal_decode_signals" -radix hex -label "Ry_valid" /tb/dut/r0/Ry_valid
+
+add wave -group "valid bits" -label "Fetch Valid?" /tb/dut/f0/f_valid
+add wave -group "valid bits" -label "Decode Valid?" /tb/dut/r0/d_valid
+add wave -group "valid bits" -label "Execute Valid?" /tb/dut/ex0/ex_valid
+add wave -group "valid bits" -label "Writeback Valid?" /tb/dut/wb0/wb_valid
+
+add wave -group "internal signals" -label "Taken" /tb/dut/ex0/taken
+add wave -group "internal signals" /tb/dut/ex0/opcode
+add wave -group "internal signals" -label "Branch Target" -radix hex /tb/dut/ex0/BT
+
+add wave -group "ALU" /tb/dut/a0/*
+
+add wave -group "BTB" -label "BTB" /tb/dut/btb0/BTBtable
+add wave -group "BTB" /tb/dut/btb0/i_wr
+add wave -group "BTB" /tb/dut/btb0/i_valid
+add wave -group "BTB" /tb/dut/btb0/w_PC
+add wave -group "BTB" /tb/dut/btb0/r_PC
+add wave -group "BTB" /tb/dut/btb0/o_valid
+
+add wave -group "Instruction" -label "clk" /tb/clk
+add wave -group "Instruction" -label "reset" /tb/reset
+add wave -group "Instruction" -label "PC" -radix hex /tb/dut/PC
+add wave -group "Instruction" -label "MEM\[PC\]" -radix hex /tb/dut/i_pc_rddata
+
+add wave -group "Pipeline Diagram" -label "Fetch" /tb/Fetch
+add wave -group "Pipeline Diagram" -label "Decode" /tb/Decode
+add wave -group "Pipeline Diagram" -label "Execute/Memory" /tb/Execute_Memory
+add wave -group "Pipeline Diagram" -label "Writeback" /tb/Writeback
+
+add wave -group "Pipeline Registers" -label "IF/ID" -radix hex /tb/dut/f0/IF_ID
+add wave -group "Pipeline Registers" -label "ID/EX" -radix hex /tb/dut/r0/ID_EX
+add wave -group "Pipeline Registers" -label "EX/WB" -radix hex /tb/dut/ex0/EX_WB
+
+add wave -group "IF/ID" -label "IF/ID -- PC_input" -radix hex /tb/dut/f0/IF_ID\[31:16\]
+
+add wave -group "ID/EX" -label "ID/EX -- Rx_valid" -radix hex /tb/dut/r0/ID_EX\[103\]
+add wave -group "ID/EX" -label "ID/EX -- Ry_valid" -radix hex /tb/dut/r0/ID_EX\[102\]
+add wave -group "ID/EX" -label "ID/EX -- Rx" -radix hex /tb/dut/r0/ID_EX\[101:99\]
+add wave -group "ID/EX" -label "ID/EX -- Ry" -radix hex /tb/dut/r0/ID_EX\[98:96\]
+add wave -group "ID/EX" -label "ID/EX -- s_ext_imm8" -radix hex /tb/dut/r0/ID_EX\[95:80\]
+add wave -group "ID/EX" -label "ID/EX -- s_ext_imm11" -radix hex /tb/dut/r0/ID_EX\[79:64\]
+add wave -group "ID/EX" -label "ID/EX -- operand1" -radix hex /tb/dut/r0/ID_EX\[63:48\]
+add wave -group "ID/EX" -label "ID/EX -- operand2" -radix hex /tb/dut/r0/ID_EX\[47:32\]
+add wave -group "ID/EX" -label "ID/EX -- PC" -radix hex /tb/dut/r0/ID_EX\[31:16\]
+add wave -group "ID/EX" -label "ID/EX -- instr" -radix hex /tb/dut/r0/ID_EX\[15:0\]
+
+delete wave /tb/clk
+delete wave /tb/reset
+delete wave /tb/dut/o_tb_regs
+delete wave /tb/o_tb_regs
+delete wave /tb/tstate
+
+run -all
+
+layout load Simulate
+layout zoomwindow wave
+noview objects
+noview processes
+noview library
+noview memory
+noview structure
+noview .main_pane.source
