@@ -31,7 +31,6 @@ add wave -group "BTB" /tb/dut/btb0/r_PC
 add wave -group "BTB" /tb/dut/btb0/o_valid
 
 add wave -group "Execute" /tb/dut/ex0/opcode
-add wave -group "Execute" /tb/dut/ex0/BTBtable\[10\]
 
 add wave -group "Instruction" -label "clk" /tb/clk
 add wave -group "Instruction" -label "reset" /tb/reset

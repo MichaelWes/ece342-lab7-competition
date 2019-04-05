@@ -140,14 +140,16 @@ module datapath_execute
 		i_wr = '0;
 		i_valid = '0;
 		w_PC = 'x;
-		case(opcode) 
-			// call, j
-			5'b11100, 5'b11000: begin
-				i_wr = '1;
-				i_valid = '1;
-				w_PC = PC - 16'd2;
-			end
-		endcase
+		if(ex_valid & taken) begin
+			casex(opcode) 
+				// call, j | Don't bother with  jz + jzr | jn + jnr.
+				5'b11x00: begin
+					i_wr = '1;
+					i_valid = '1;
+					w_PC = instr_PC;
+				end
+			endcase
+		end
 	end
 	
 	always_comb begin
@@ -264,7 +266,7 @@ module datapath_execute
 		if(reset) begin
 			EX_WB <= '0;
 		end else begin
-			EX_WB <= {PC, data1, data2, ALUout, instr};
+			EX_WB <= {instr_PC + 16'd2, data1, data2, ALUout, instr};
 		end
 	end
 	
