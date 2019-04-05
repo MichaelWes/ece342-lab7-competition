@@ -30,6 +30,7 @@ module datapath_RF_Read
 	
 	wire [15:0] PC = IF_ID[31:16];
 	wire [15:0] instr = i_pc_rddata[15:0];
+	wire [15:0] PC_plus_two = IF_ID[47:32];
 	
 	output logic [2:0] Rx;
 	output logic [2:0] Ry;
@@ -102,7 +103,7 @@ module datapath_RF_Read
          ID_EX <= '0;   
       end else begin
          //  the instruction's exact PC is IF_ID[15:0]
-         ID_EX <= {IF_ID[15:0], Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, operand1, operand2, PC, instr};  
+         ID_EX <= {PC_plus_two, IF_ID[15:0], Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, operand1, operand2, PC, instr};  
       end
    end
 endmodule

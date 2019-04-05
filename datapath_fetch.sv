@@ -32,6 +32,9 @@ module datapath_fetch
    // whatever is needed as input to the next stage.
    output logic [IF_ID_WIDTH-1:0] IF_ID;
    
+	// small optimization
+	wire [15:0] PC_plus_two = PC + 16'd2;
+	
 	logic [15:0] PC_input;
 	always_comb begin
 		if(taken == 1'b1) begin
@@ -40,7 +43,7 @@ module datapath_fetch
 			if(o_valid) begin
 				PC_input = o_BT; // speculate branch outcome: taken, with branch target given by BTB if we have a valid BT saved for this PC.
 			end else begin
-				PC_input = PC + 16'd2;
+				PC_input = PC_plus_two;
 			end
 		end
 	end
@@ -55,6 +58,7 @@ module datapath_fetch
          IF_ID <= '0;
       end else begin
          PC <= PC_input;
+			IF_ID[47:32] <= PC_plus_two;
          IF_ID[31:16] <= PC_input;
          IF_ID[15:0] <= PC;
       end
