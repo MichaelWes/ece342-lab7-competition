@@ -1,6 +1,6 @@
 package definesPkg;
    // TODO: Determine the right width
-   parameter IF_ID_WIDTH = 16 * 3;
+   parameter IF_ID_WIDTH = 16 * 2;
    
    // TODO: Determine the right width
    parameter ID_EX_WIDTH = (16 * 6) + (2 * 3) + (2 * 1) + 16 + 16;

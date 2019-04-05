@@ -61,9 +61,8 @@ module datapath_execute
 	wire [2:0] Ry;
 	wire Rx_valid, Ry_valid;
 	wire [15:0] instr_PC;
-	wire [15:0] PC_plus_two;
 	
-   assign {PC_plus_two, instr_PC, Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, data1, data2, PC, instr} = ID_EX;
+   assign {instr_PC, Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, data1, data2, PC, instr} = ID_EX;
 	
 	always_ff @(posedge clk or posedge reset) begin
 		if(reset) begin
@@ -267,7 +266,7 @@ module datapath_execute
 		if(reset) begin
 			EX_WB <= '0;
 		end else begin
-			EX_WB <= {PC_plus_two, data1, data2, ALUout, instr};
+			EX_WB <= {instr_PC + 16'd2, data1, data2, ALUout, instr};
 		end
 	end
 	
