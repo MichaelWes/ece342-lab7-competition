@@ -1,7 +1,7 @@
 quit -sim
 vlog definesPkg.sv
 vlog *.sv
-vsim -novopt tb
+vsim -novopt tb -t ns
 add wave -group "Flag Bits" -label "Zero Flag" /tb/dut/a0/Z
 add wave -group "Flag Bits" -label "Negative Flag" /tb/dut/a0/N
 
