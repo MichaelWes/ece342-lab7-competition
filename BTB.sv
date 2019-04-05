@@ -7,10 +7,11 @@ module BTB
 	i_wr,
 	w_PC,
 	r_PC,
-	i_valid, // tells us whether to WRITE the valid bit of _BTB[i_PC & 0x00FF]
+	i_valid, // tells us whether to WRITE the valid bit of BTBtable[i_PC & 0x00FF]
 	i_BT,
 	o_valid,
-	o_BT
+	o_BT,
+	BTBtable
 );
 	input clk;
 	input reset;
@@ -25,8 +26,8 @@ module BTB
 	output logic o_valid;
 	output logic [15:0] o_BT;
 	
-	// This is 17 bits because the MSB is a valid bit
-	logic [BTB_num_rows - 1:0][16:0] BTBtable;
+	// This is 18 bits because the 2 MSB are valid bits.
+	output logic [BTB_num_rows - 1:0][17:0] BTBtable;
 	
 	always_comb begin
 		o_BT = BTBtable[rindex][15:0];
@@ -39,7 +40,7 @@ module BTB
 		end else begin
 			// Asserted in Execute stage, based on opcode.
 			if(i_wr) begin
-				BTBtable[windex] <= {i_valid, i_BT};
+				BTBtable[windex] <= {1'b1, i_valid, i_BT};
 			end
 		end
 	end

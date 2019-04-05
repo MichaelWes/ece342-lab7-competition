@@ -101,8 +101,8 @@ module datapath_RF_Read
       if(reset) begin
          ID_EX <= '0;   
       end else begin
-         // TODO: Other information to pass along?
-         ID_EX <= {Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, operand1, operand2, PC, instr};  
+         //  the instruction's exact PC is IF_ID[15:0]
+         ID_EX <= {IF_ID[15:0], Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, operand1, operand2, PC, instr};  
       end
    end
 endmodule

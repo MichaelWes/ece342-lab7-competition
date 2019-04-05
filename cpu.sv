@@ -26,7 +26,9 @@ module cpu
 	wire i_valid; // tells us whether to WRITE the valid bit of _BTB[i_PC & 0x00FF]
 	wire [15:0] i_BT = BT;
 	wire o_valid;
+	wire already_valid;
 	wire [15:0] o_BT;
+	wire [BTB_num_rows - 1:0][17:0] BTBtable;
 	BTB btb0(.*);
 	
    // Instruction Fetch interface

@@ -38,7 +38,7 @@ module datapath_fetch
 			PC_input = BT;
 		end else begin
 			if(o_valid) begin
-				PC_input = o_BT;
+				PC_input = o_BT; // speculate branch outcome: taken, with branch target given by BTB if we have a valid BT saved for this PC.
 			end else begin
 				PC_input = PC + 16'd2;
 			end
@@ -56,7 +56,7 @@ module datapath_fetch
       end else begin
          PC <= PC_input;
          IF_ID[31:16] <= PC_input;
-         IF_ID[15:0] <= '0;
+         IF_ID[15:0] <= PC;
       end
    end
    

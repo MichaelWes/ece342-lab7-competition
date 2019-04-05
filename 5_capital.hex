@@ -1,5 +1,5 @@
 2c10	// 0000: 	mvi r0, str		
-0024	// 0002: 	ld r1, r0		
+0024	// 0002: loop_top: ld r1, r0		
 0033	// 0004: 	cmpi r1, 0		
 00b9	// 0006: 	jz done
 0180	// 0008: 	mv r4, r1		
@@ -7,12 +7,12 @@
 0025	// 000c: 	st r1, r0		
 0211	// 000e: 	addi r0, 2		
 ff18	// 0010: 	j loop_top
-2c30	// 0012: 	mvi r1, str		
+2c30	// 0012: done: mvi r1, str		
 0210	// 0014: 	mvi r0, 0x02
 1016	// 0016: 	mvhi r0, 0x10
 0025	// 0018: 	st r1, r0
 fff8	// 001a: end: j end
-0420	// 001c: 	mv r1, r4		
+0420	// 001c: toupper: mv r1, r4		
 6133	// 001e: 	cmpi r1, 'a'	
 00ea	// 0020: 	jnr r7
 7b33	// 0022: 	cmpi r1, '{'	

@@ -25,11 +25,14 @@ module datapath_execute
 	ex_valid,
 	i_wr,
 	i_valid,
-	w_PC
+	already_valid,
+	w_PC,
+	BTBtable
 );
    input clk;
    input reset;   
    input d_valid;
+	input already_valid; // hack for fixing speculation
 	output logic i_wr;
 	output logic i_valid;
 	output logic [15:0] w_PC;
@@ -37,6 +40,9 @@ module datapath_execute
 	// branch instruction logic
 	output logic [15:0] BT;
 	output logic taken;
+	
+	// speculation 
+	input [BTB_num_rows - 1:0][17:0] BTBtable;
 	
    input [ID_EX_WIDTH-1:0] ID_EX;
    output logic [EX_WB_WIDTH-1:0] EX_WB;
@@ -54,8 +60,9 @@ module datapath_execute
 	wire [2:0] Rx;
 	wire [2:0] Ry;
 	wire Rx_valid, Ry_valid;
+	wire [15:0] instr_PC;
 	
-   assign {Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, data1, data2, PC, instr} = ID_EX;
+   assign {instr_PC, Rx_valid, Ry_valid, Rx, Ry, s_ext_imm8, s_ext_imm11, data1, data2, PC, instr} = ID_EX;
 	
 	always_ff @(posedge clk or posedge reset) begin
 		if(reset) begin
@@ -105,9 +112,13 @@ module datapath_execute
 		taken = '0;
 		if(ex_valid) begin
 			casex(opcode)
-				// jr, callr, j, call instructions imply the branch should be taken
-				5'bx1x00: begin 
-					taken = '1;
+				// jr, callr, instructions imply the branch should be taken. Not speculating for these (yet).
+				5'b01x00: begin 
+					taken = '1; 
+				end
+				// j, call
+				5'b11x00: begin
+					taken = ~BTBtable[instr_PC[4:0]][17]; // because we don't want to take it twice... look at the BTB valid bit to determine whether to take the branch. 
 				end
 				// jz, jzr instructions imply branch is taken when the condition holds
 				5'bx1001: begin
@@ -127,7 +138,8 @@ module datapath_execute
 	always_comb begin
 		BT = ALUout;
 		i_wr = '0;
-		i_valid = '0;		
+		i_valid = '0;
+		w_PC = 'x;
 		case(opcode) 
 			// call, j
 			5'b11100, 5'b11000: begin
